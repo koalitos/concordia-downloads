@@ -1,0 +1,103 @@
+name: Build and publish Concórdia
+
+on:
+  push:
+    branches: [main]
+    paths: [release-source.zip, release.json, .github/workflows/desktop-release.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify and unpack distributable sources
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          archive = pathlib.Path('release-source.zip')
+          metadata = json.loads(pathlib.Path('release.json').read_text())
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == metadata['sha256'], 'Archive checksum mismatch'
+          with zipfile.ZipFile(archive) as bundle:
+              for name in bundle.namelist():
+                  path = pathlib.PurePosixPath(name)
+                  assert not path.is_absolute() and '..' not in path.parts
+                  assert path.parts[0] in ['desktop', 'client']
+              bundle.extractall('source')
+          package = json.loads(pathlib.Path('source/desktop/package.json').read_text())
+          assert package['version'] == metadata['version']
+          PY
+      - name: Install desktop builder
+        working-directory: source/desktop
+        run: npm ci
+      - name: Build installers and update metadata
+        working-directory: source/desktop
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: npm run release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            source/desktop/dist/*.dmg
+            source/desktop/dist/*.zip
+            source/desktop/dist/*.exe
+            source/desktop/dist/*.blockmap
+            source/desktop/dist/latest*.yml
+
+  publish:
+    name: Publish complete release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-*
+          path: installers
+          merge-multiple: true
+      - name: Verify all required downloads and update payloads
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          version = json.loads(pathlib.Path('release.json').read_text())['version']
+          expected = ['Concordia-arm64.dmg', 'Concordia-x64.dmg', 'Concordia-arm64.zip', 'Concordia-x64.zip', 'Concordia-Setup.exe', 'latest-mac.yml', 'latest.yml']
+          for name in expected:
+              assert pathlib.Path('installers', name).stat().st_size > 0, name
+          for name in ['latest.yml', 'latest-mac.yml']:
+              assert f'version: {version}' in pathlib.Path('installers', name).read_text()
+          PY
+      - name: Publish downloads atomically after both builds pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python -c 'import json; print(json.load(open("release.json"))["version"])')
+          tag="v$version"
+          if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --draft --title "Concórdia $version" --notes-file RELEASE-NOTES.md
+          fi
+          gh release upload "$tag" installers/* --repo "$GITHUB_REPOSITORY" --clobber
+          gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --latest
