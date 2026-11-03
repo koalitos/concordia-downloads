@@ -1,11 +1,11 @@
-# Concórdia 1.0.9
+# Concórdia 1.0.10
 
-- Sua própria câmera volta à grade, espelhada e muda, incluindo os fundos e efeitos escolhidos.
-- Sua própria live de tela continua oculta. Um aviso permanente “Você está ao vivo” mostra a sala e permite parar a transmissão, mesmo ao visualizar outra sala.
-- Aviso de nova versão no topo do app, com progresso e “Reiniciar e atualizar”, sem cobrir os controles no desktop ou celular.
-- Fundos da câmera: desfoque leve/médio/forte, fundos prontos, foto personalizada e prévia local. Preferência e foto salvas por conta neste dispositivo.
-- Seis sons complementares para entrada/saída da sala, início/fim de live e câmera ligada/desligada. Volume, mute e prévias em Preferências → Sons.
-- Avisos sem duplicação nos snapshots e reconexões; sair da sala não gera uma cascata de sons de fim de transmissão.
+- Áudio isolado do aplicativo escolhido, sem capturar a saída geral do computador. Discord, Concórdia e outros apps de chamada conhecidos são bloqueados como fontes de som.
+- Janelas compartilham apenas a saída do aplicativo correspondente, quando disponível; a tela inteira começa sem som e permite escolher um único aplicativo.
+- Para isolar abas de navegadores, use a captura de aba com áudio no navegador. Janelas do mesmo aplicativo podem compartilhar a mesma saída de som.
+- No Linux/Wayland, confirme a saída de áudio correspondente à fonte escolhida no seletor do sistema.
+- Novo aviso de live com nome da fonte, aplicativo de áudio, sala e opção de renomear.
+- Recuperação de sessão e mensagens de login corrigidas.
 
 ## Instalação
 
