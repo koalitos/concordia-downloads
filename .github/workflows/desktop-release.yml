@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +46,9 @@ jobs:
       - name: Install desktop builder
         working-directory: source/desktop
         run: npm ci
+      - name: Install Linux packaging tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libarchive-tools
       - name: Build installers and update metadata
         working-directory: source/desktop
         env:
@@ -63,6 +66,8 @@ jobs:
             source/desktop/dist/*.dmg
             source/desktop/dist/*.zip
             source/desktop/dist/*.exe
+            source/desktop/dist/*.AppImage
+            source/desktop/dist/*.tar.gz
             source/desktop/dist/*.blockmap
             source/desktop/dist/latest*.yml
 
@@ -84,13 +89,13 @@ jobs:
           python - <<'PY'
           import json, pathlib
           version = json.loads(pathlib.Path('release.json').read_text())['version']
-          expected = ['Concordia-arm64.dmg', 'Concordia-x64.dmg', 'Concordia-arm64.zip', 'Concordia-x64.zip', 'Concordia-Setup.exe', 'latest-mac.yml', 'latest.yml']
+          expected = ['Concordia-arm64.dmg', 'Concordia-x64.dmg', 'Concordia-arm64.zip', 'Concordia-x64.zip', 'Concordia-Setup.exe', 'latest-mac.yml', 'latest.yml', 'latest-linux.yml', f'Concordia-{version}-linux-x86_64.AppImage', f'Concordia-{version}-linux-x64.tar.gz']
           for name in expected:
               assert pathlib.Path('installers', name).stat().st_size > 0, name
-          for name in ['latest.yml', 'latest-mac.yml']:
+          for name in ['latest.yml', 'latest-mac.yml', 'latest-linux.yml']:
               assert f'version: {version}' in pathlib.Path('installers', name).read_text()
           PY
-      - name: Publish downloads atomically after both builds pass
+      - name: Publish downloads atomically after all builds pass
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

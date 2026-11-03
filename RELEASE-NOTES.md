@@ -1,16 +1,23 @@
-## Concórdia 1.0.6
+# Concórdia 1.0.8
 
-- Fundo preto e superfícies neutras no navegador e no aplicativo instalado. O desktop respeita o tema do site, sem injetar o estilo azul antigo.
-- Duplo clique no nome da sala entra diretamente. Enter oferece a mesma ação pelo teclado.
-- Entrar novamente na sala atual mantém a câmera e a tela ativas. Ao trocar de sala, a captura anterior é encerrada e a nova sala começa com a captura desligada.
-- Menu do botão direito com avatar, identificação e opções separadas para sua conta, transmissões e moderação.
-- No seu menu: editar perfil, ajustar tela e câmera, iniciar/parar capturas e sair da sala.
-- No menu de outra pessoa: ver perfil, assistir/parar de assistir tela e ações de moderação conforme seu cargo. Remover do espaço pede confirmação dentro do aplicativo.
-- Botão direito também nos vídeos; menus acessíveis por teclado e posicionados dentro da tela.
+- Login automático ao completar os seis dígitos do código de dois fatores, inclusive colando o código.
+- Lives com som do sistema/aba quando disponível, inicialmente mutadas. Mute e volume são salvos por conta e por pessoa transmitindo.
+- Captura do som no Windows e macOS pelo sistema; Linux desktop usa a saída PulseAudio/PipeWire com `parec`, sem ativar microfone.
+- Correções na negociação de câmera e tela, fila de candidates ICE e recuperação automática de conexão. A interface oferece reconectar se a imagem não chegar.
+- Seletor de captura com telas e janelas disponíveis e aba inicial correta.
+- Nítida com resolução nativa e bitrate maior; ajustes reaplicados depois da negociação. Perfil Leve sem dupla redução de resolução.
+- A própria tela/câmera deixa de aparecer na grade; as transmissões de outras pessoas continuam disponíveis.
+- Atualizador verifica novas versões ao abrir e a cada 15 minutos, mostra progresso e permite reiniciar com confirmação. Verificação manual na bandeja e download manual para pacotes sem suporte.
 
-### Instalação
+Conexões entre redes com CGNAT/firewall dependem de um relay TURN configurado no servidor.
 
-Windows recebe a atualização pelo aplicativo instalado. No Mac, instalações sem assinatura Apple precisam baixar o DMG e substituir o app em Aplicativos; o login é preservado. Os pacotes Mac incluem Apple Silicon e Intel.
+## Instalação
+
+Windows e AppImage Linux recebem a atualização pelo aplicativo instalado.
+No macOS, atualização automática exige um app assinado com Developer ID;
+pacotes sem esse certificado devem ser substituídos manualmente pelo novo
+DMG. Fechar pelo X apenas esconde o aplicativo; use Sair na bandeja para
+aplicar uma atualização adiada. Os pacotes Mac incluem Apple Silicon e Intel.
 
 Para compartilhar no Mac, autorize o Concórdia em Ajustes do Sistema → Privacidade e Segurança → Gravação de Tela. Pacotes sem certificado podem exigir liberação em Privacidade e Segurança → Abrir Mesmo Assim. Se continuar bloqueado após mover para Aplicativos:
 
