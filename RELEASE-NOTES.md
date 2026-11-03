@@ -1,15 +1,11 @@
-# Concórdia 1.0.8
+# Concórdia 1.0.9
 
-- Login automático ao completar os seis dígitos do código de dois fatores, inclusive colando o código.
-- Lives com som do sistema/aba quando disponível, inicialmente mutadas. Mute e volume são salvos por conta e por pessoa transmitindo.
-- Captura do som no Windows e macOS pelo sistema; Linux desktop usa a saída PulseAudio/PipeWire com `parec`, sem ativar microfone.
-- Correções na negociação de câmera e tela, fila de candidates ICE e recuperação automática de conexão. A interface oferece reconectar se a imagem não chegar.
-- Seletor de captura com telas e janelas disponíveis e aba inicial correta.
-- Nítida com resolução nativa e bitrate maior; ajustes reaplicados depois da negociação. Perfil Leve sem dupla redução de resolução.
-- A própria tela/câmera deixa de aparecer na grade; as transmissões de outras pessoas continuam disponíveis.
-- Atualizador verifica novas versões ao abrir e a cada 15 minutos, mostra progresso e permite reiniciar com confirmação. Verificação manual na bandeja e download manual para pacotes sem suporte.
-
-Conexões entre redes com CGNAT/firewall dependem de um relay TURN configurado no servidor.
+- Sua própria câmera volta à grade, espelhada e muda, incluindo os fundos e efeitos escolhidos.
+- Sua própria live de tela continua oculta. Um aviso permanente “Você está ao vivo” mostra a sala e permite parar a transmissão, mesmo ao visualizar outra sala.
+- Aviso de nova versão no topo do app, com progresso e “Reiniciar e atualizar”, sem cobrir os controles no desktop ou celular.
+- Fundos da câmera: desfoque leve/médio/forte, fundos prontos, foto personalizada e prévia local. Preferência e foto salvas por conta neste dispositivo.
+- Seis sons complementares para entrada/saída da sala, início/fim de live e câmera ligada/desligada. Volume, mute e prévias em Preferências → Sons.
+- Avisos sem duplicação nos snapshots e reconexões; sair da sala não gera uma cascata de sons de fim de transmissão.
 
 ## Instalação
 
