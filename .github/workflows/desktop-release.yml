@@ -20,7 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         # Intel também empacota arm64 e evita a fila saturada dos runners Mac ARM.
-        os: [macos-15-intel, windows-latest, ubuntu-latest]
+        # node-gyp 11 usa Visual Studio 2022; windows-latest já usa VS 2026.
+        os: [macos-15-intel, windows-2022, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
