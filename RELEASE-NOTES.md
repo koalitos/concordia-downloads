@@ -1,11 +1,12 @@
-# Concórdia 1.0.10
+# Concórdia 1.0.11
 
-- Áudio isolado do aplicativo escolhido, sem capturar a saída geral do computador. Discord, Concórdia e outros apps de chamada conhecidos são bloqueados como fontes de som.
-- Janelas compartilham apenas a saída do aplicativo correspondente, quando disponível; a tela inteira começa sem som e permite escolher um único aplicativo.
-- Para isolar abas de navegadores, use a captura de aba com áudio no navegador. Janelas do mesmo aplicativo podem compartilhar a mesma saída de som.
-- No Linux/Wayland, confirme a saída de áudio correspondente à fonte escolhida no seletor do sistema.
-- Novo aviso de live com nome da fonte, aplicativo de áudio, sala e opção de renomear.
-- Recuperação de sessão e mensagens de login corrigidas.
+- Primeiro suporte à troca automática entre o cliente de League of Legends / TFT e a partida, no desktop Windows e macOS.
+- Selecione a janela do cliente ou da partida e marque “Acompanhar launcher e partida automaticamente”. A opção começa desmarcada.
+- A live acompanha a partida, volta ao cliente quando ela termina e mostra uma tela de espera se nenhuma das janelas estiver disponível, sem exigir que os espectadores voltem a assistir.
+- Quando selecionado, o som isolado acompanha o aplicativo. O nome personalizado da live é preservado, com indicação de Cliente, Partida ou espera.
+- A captura permanece limitada à mesma instalação do jogo; outros launchers e jogos ainda usam seleção manual. No Linux e no navegador, a seleção continua manual.
+
+Este suporte inicial passou por testes automatizados de detecção, troca de vídeo, áudio e encerramento. A validação com uma partida real no Windows/macOS ainda está pendente. Se a tela cheia exclusiva não produzir imagem, use janela ou janela sem bordas.
 
 ## Instalação
 
